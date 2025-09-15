@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$creator - Just Create</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial Black', sans-serif;
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Canvas background */
+    #bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      background: linear-gradient(45deg, #ff007f, #00f7ff, #ffdb4d);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px #ff007f, 0 0 40px #00f7ff; }
+      to { text-shadow: 0 0 50px #ffdb4d, 0 0 100px #ff007f; }
+    }
+
+    .glass-card {
+      margin-top: 30px;
+      max-width: 800px;
+      padding: 25px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 2s ease-in-out;
+    }
+
+    p {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: #e0e0e0;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #fff;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #ff007f, #00f7ff, #ffdb4d);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff007f, 0 0 40px #00f7ff;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #aaa;
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.5s ease;
+      z-index: 10;
+    }
+
+    .modal-content {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 50px #ff007f;
+      animation: zoomIn 0.6s ease;
+    }
+
+    .modal-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #ff007f, #00f7ff, #ffdb4d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .modal-content p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .close-btn {
+      padding: 10px 25px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #00f7ff, #ff007f);
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .close-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00f7ff, 0 0 40px #ff007f;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      p { font-size: 1rem; }
+      .modal-content h2 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div class="container">
+    <h1>JUST CREATE</h1>
+    <div class="glass-card">
+      <p>
+        $creator is the future. It represents innovation, freedom, and creativity 
+        without limits. The world must know it because it has the potential to 
+        revolutionize industries, empower creators, and build a community 
+        destined for greatness. Greater things are coming — and $creator will 
+        lead the way.
+      </p>
+      <button class="btn" id="openModal">Join the Future</button>
+    </div>
+    <footer>owner: creatorDev_sol</footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="myModal">
+    <div class="modal-content">
+      <h2>$CREATOR</h2>
+      <p>Owner: <strong>creatorDev_sol</strong></p>
+      <button class="close-btn" id="closeModal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Particle + Shooting Stars
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = [];
+    const shootingStars = [];
+    const colors = ['#ff007f', '#00f7ff', '#ffdb4d', '#ffffff'];
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+      }
+    }
+
+    class ShootingStar {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * (canvas.height / 2);
+        this.len = Math.random() * 80 + 20;
+        this.speed = Math.random() * 10 + 6;
+        this.size = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x -= this.speed;
+        this.y += this.speed;
+        if (this.x < 0 || this.y > canvas.height) {
+          this.x = Math.random() * canvas.width;
+          this.y = -10;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x + this.len, this.y - this.len);
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = this.size;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = '#fff';
+        ctx.stroke();
+      }
+    }
+
+    function initStars() {
+      for (let i = 0; i < 150; i++) {
+        stars.push(new Star());
+      }
+      for (let i = 0; i < 5; i++) {
+        shootingStars.push(new ShootingStar());
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(s => s.draw());
+      shootingStars.forEach(s => {
+        s.update();
+        s.draw();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    initStars();
+    animate();
+
+    // Modal Logic
+    const modal = document.getElementById('myModal');
+    const openBtn = document.getElementById('openModal');
+    const closeBtn = document.getElementById('closeModal');
+
+    openBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
